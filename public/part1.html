@@ -16,6 +16,13 @@
         type: Phaser.AUTO,
         width: 800,
         height: 600,
+        physics: {
+          default: 'arcade',
+          arcade: {
+            gravity: { y: 300 },
+            debug: false,
+          },
+        },
         scene: {
           preload: preload,
           create: create,
@@ -38,7 +45,21 @@
 
       function create() {
         this.add.image(400, 300, 'sky');
-        this.add.image(400, 300, 'star');
+        platforms = this.physics.add.staticGroup();
+        // this creates a new static physics group, assigning it to "platforms"
+        // dynamic stuff moves around, collides, etc. (like the zam)
+        // static stuff can collide but it stays put - doesn't change - static (boards, ground, walls)
+        // the 'group' aspect gives it access to create method. all children created this way inherit physics
+
+        platforms.create(400, 568, 'ground').setScale(2).refreshBody(); // these create calls are relying on the physics config setting
+        // platforms.create: create static platform object
+        // (400, 568): ground position (offset from 0,0 of canvas, this is where CENTER of IMAGE is placed
+        // setScale(2): this just happens to be the exact multiple to size this shape correctly to the canvas
+        // refreshBody(): needed to re-render after setScale(because it's static)
+
+        platforms.create(600, 400, 'ground'); // looks like basically just tell it where to render and the size of platform takes care of itself
+        platforms.create(50, 250, 'ground');
+        platforms.create(750, 220, 'ground');
       }
 
       function update() {}
