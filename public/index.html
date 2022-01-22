@@ -60,6 +60,51 @@
         platforms.create(600, 400, 'ground'); // looks like basically just tell it where to render and the size of platform takes care of itself
         platforms.create(50, 250, 'ground');
         platforms.create(750, 220, 'ground');
+
+        // CREATE PLAYER
+        player = this.physics.add.sprite(100, 450, 'dude');
+        // create new sprite called player, 100x450 from the bottom of the game
+        // this.physics.add creates this as dynamic physics body (by default)
+
+        player.setBounce(0.2);
+        // give the sprite a slight bounce
+
+        player.setCollideWorldBounds(true);
+        // set it so the sprite collides with the world bounds.
+        // "bounds, by default, are the outside of the game dimensions"/edge of screen
+
+        this.anims.create({
+          // animation for running left
+          key: 'left',
+          frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+          // start at sprite sheet frame 0, end at frame 3
+          frameRate: 10,
+          // change frames at 10/sec
+          repeat: -1,
+          // repeat forever
+        });
+
+        this.anims.create({
+          key: 'turn',
+          frames: [{ key: 'dude', frame: 4 }],
+          frameRate: 20,
+        });
+
+        this.anims.create({
+          key: 'right',
+          frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+          frameRate: 10,
+          repeat: -1,
+        });
+
+        player.body.setGravityY(300);
+        // creating the physics sprite created a body property which we can manipulate
+        // this example boosts the gravity that sprite experiences.
+
+        this.physics.add.collider(player, platforms);
+        // the collider handles collision logic!
+        // platforms won't be affected because they are static (otherwise they'd fall down too)
+        // this could also invoke my own callback, but not needed for simple static collisions
       }
 
       function update() {}
