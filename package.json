@@ -1,0 +1,14 @@
+{
+  "name": "ice-resurfacer",
+  "version": "1.0.0",
+  "description": "test your mettle in the high stakes world of ice resurfacing",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "tyler monaghan",
+  "license": "ISC",
+  "dependencies": {
+    "phaser": "^3.55.2"
+  }
+}
