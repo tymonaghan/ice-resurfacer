@@ -28,6 +28,11 @@
 
       var cursors;
       var player;
+      var scuffs;
+      var score;
+      var scoreText;
+      var time;
+      var timeDisplay;
 
       var game = new Phaser.Game(config);
 
@@ -36,33 +41,55 @@
 
         this.load.image('rink', 'assets/rink2.png');
         this.load.image('resurfacer', 'assets/resurfacer.png');
+        this.load.image('scuff', 'assets/scuff.png');
       }
 
       function create() {
+        // rink
         this.add.image(400, 300, 'rink');
+
+        // scuffs
+        scuffs = this.physics.add.group({
+          key: 'scuff',
+          repeat: 50,
+          setXY: {
+            x: 75,
+            y: 150,
+            stepX: 10,
+          },
+        });
+        scuffs.children.iterate(function (child) {
+          child.x = Phaser.Math.Between(100, 700);
+          child.y = Phaser.Math.Between(115, 500);
+        });
+
+        // player / ice resurfacer
         player = this.physics.add.sprite(100, 100, 'resurfacer').setScale(1.5);
         player.setDamping(true);
         player.setDrag(0.98);
         player.setCollideWorldBounds(true);
 
+        // make the resurfacer sparkle all the time because why not
+        var particles = this.add.particles('red');
+        var emitter = particles.createEmitter({
+          speed: 100,
+          scale: { start: 1, end: 0 },
+          blendMode: 'ADD',
+        });
+        emitter.startFollow(player);
+
         //  Input Events
         cursors = this.input.keyboard.createCursorKeys();
 
-        // var particles = this.add.particles('red');
+        // collisions/ pickups
+        this.physics.add.overlap(player, scuffs, cleanScuff, null, this);
 
-        // var emitter = particles.createEmitter({
-        //   speed: 100,
-        //   scale: { start: 1, end: 0 },
-        //   blendMode: 'ADD',
-        // });
-
-        // var logo = this.physics.add.image(400, 100, 'logo');
-
-        // logo.setVelocity(100, 200);
-        // logo.setBounce(1, 1);
-        // logo.setCollideWorldBounds(true);
-
-        // emitter.startFollow(logo);
+        // scoreboard and timer
+        score = 0;
+        scoreText = this.add.text(15, 15, 'Score: 0', {
+          fontSize: '32px',
+          fill: '#ffffff',
+        });
       }
 
       function update() {
@@ -75,11 +102,7 @@
         } else if (cursors.right.isDown) {
           player.setAngle(player.angle + 3);
         } else if (cursors.up.isDown) {
-          // console.log(up);
           player.setVelocityX(Math.abs(player.angle) - 90);
-          console.log(player.accelerationX);
-
-          // console.log(Math.abs(player.angle) - 90);
           player.setVelocityY(
             // translating angle into x and y velocities sucks
             Math.abs(player.angle) < 180 - Math.abs(player.angle)
@@ -91,6 +114,13 @@
               : 180 - Math.abs(player.angle) // going down and left
           );
         }
+      }
+
+      function cleanScuff(player, scuff) {
+        scuff.disableBody(true, true);
+
+        score += 1;
+        scoreText.setText('Score: ' + score);
       }
     </script>
   </body>
