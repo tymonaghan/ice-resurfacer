@@ -36,6 +36,7 @@
       var boards;
       var currentRinkName;
       var gameOver = false;
+      var win = false;
 
       var game = new Phaser.Game(config);
 
@@ -152,10 +153,17 @@
 
         if (gameOver) {
           this.physics.pause();
-          this.add.text(400, 300, "You're fired!", {
-            fontSize: '32px',
-            fill: '#ffffff',
-          });
+          if (win) {
+            this.add.text(400, 300, 'You did it!', {
+              fontSize: '32px',
+              fill: '#ffffff',
+            });
+          } else {
+            this.add.text(400, 300, "You're fired!", {
+              fontSize: '32px',
+              fill: '#ffffff',
+            });
+          }
         }
       }
 
@@ -166,6 +174,7 @@
         scoreText.setText('Score: ' + score);
 
         if (scuffs.countActive(true) === 0) {
+          win = true;
           //  when all scuffs are collected, game over man, game over.
           // make the resurfacer sparkle all the time because why not
           var particles = this.add.particles('red');
@@ -176,10 +185,6 @@
           });
           emitter.startFollow(player);
           this.physics.pause();
-          this.add.text(400, 300, 'You did it!', {
-            fontSize: '32px',
-            fill: '#ffffff',
-          });
           gameOver = true;
         }
       }
