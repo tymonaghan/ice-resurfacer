@@ -139,14 +139,53 @@
         function collectStar(player, star) {
           star.disableBody(true, true);
           // this callback disabled physics and makes the star invisible - basically removing it from play
+
           score += 10;
           scoreText.setText('Score: ' + score); // update the score and its text display on screen
+
+          if (stars.countActive(true) === 0) {
+            // if that was the last star
+            stars.children.iterate(function (child) {
+              // then iterate over them stars again
+              child.enableBody(true, child.x, 0, true, true); // re-enable them at the same X, but Y of 0 (top of screen)
+            });
+
+            var x =
+              player.x < 400
+                ? Phaser.Math.Between(400, 800)
+                : Phaser.Math.Between(0, 400);
+            // this sets the X location of the bomb - always opposite hemisphere of screen
+
+            var bomb = bombs.create(x, 16, 'bomb'); // create the bomb (always at x, and y:16)
+            bomb.setBounce(1); // bouncy
+            bomb.setCollideWorldBounds(true); // bomb is constrained by screen
+            bomb.setVelocity(Phaser.Math.Between(-200, 200), 20); // set the speed (i guess X and Y independently?)
+          }
         }
 
         scoreText = this.add.text(16, 16, 'score: 0', {
           fontSize: '32px',
           fill: '#000',
         });
+
+        // BOMBS!
+        bombs = this.physics.add.group(); // initialize the physics group
+
+        this.physics.add.collider(bombs, platforms); // make bombs collide with platforms
+
+        this.physics.add.collider(player, bombs, hitBomb, null, this); // make bombs collide with players
+        // and when they do, they call hitBomb(player, bombs)
+
+        function hitBomb(player, bomb) {
+          this.physics.pause(); // pause the game physics
+          // this suggests you could gameOver and let the physics keep running which is always fun.
+
+          player.setTint(0xff0000); // tint the player sprite red
+
+          player.anims.play('turn'); // play the "turn" player animation
+
+          gameOver = true; // set gameOver state to true, which i guess is its own thing
+        }
       } // end of CREATE phaser function
 
       function update() {
