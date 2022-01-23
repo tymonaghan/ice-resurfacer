@@ -33,6 +33,8 @@
       var scoreText;
       var time;
       var timeDisplay;
+      var boards;
+      var currentRinkName;
 
       var game = new Phaser.Game(config);
 
@@ -42,12 +44,21 @@
         this.load.image('rink', 'assets/rink2.png');
         this.load.image('resurfacer', 'assets/resurfacer.png');
         this.load.image('scuff', 'assets/scuff.png');
+        this.load.image('boards', 'assets/boards.png');
+        this.load.image('wall', 'assets/platform.png');
       }
 
       function create() {
+        //boards (write under the rink so they're invisible)
+        boards = this.physics.add.staticGroup();
+        // boards.create(400, 300, 'boards');
+        boards.create(400, 72, 'wall').setScale(2).refreshBody();
+        boards.create(400, 590, 'wall').setScale(2).refreshBody();
+        boards.create(15, 350, 'wall').setScale(2).setAngle(90).refreshBody();
+        boards.create(780, 350, 'wall').setScale(2).setAngle(90).refreshBody();
+
         // rink
         this.add.image(400, 300, 'rink');
-
         // scuffs
         scuffs = this.physics.add.group({
           key: 'scuff',
@@ -64,7 +75,8 @@
         });
 
         // player / ice resurfacer
-        player = this.physics.add.sprite(100, 100, 'resurfacer').setScale(1.5);
+        player = this.physics.add.sprite(300, 200, 'resurfacer').setScale(1.5);
+        player.setBounce(0.1);
         player.setDamping(true);
         player.setDrag(0.98);
         player.setCollideWorldBounds(true);
@@ -83,6 +95,8 @@
 
         // collisions/ pickups
         this.physics.add.overlap(player, scuffs, cleanScuff, null, this);
+        this.physics.add.collider(player, boards);
+        // not sure why i'm not colliding with the boards here
 
         // scoreboard and timer
         score = 0;
@@ -90,6 +104,23 @@
           fontSize: '32px',
           fill: '#ffffff',
         });
+
+        time = 0;
+        timeDisplay = this.add.text(15, 40, 'Time: 0', {
+          fontSize: '32px',
+          fill: '#ffffff',
+        });
+
+        currentRinkName = this.add.text(
+          380,
+          15,
+          'Current Rink:\nVillage Grove Park District',
+          {
+            align: 'right',
+            fontSize: '24px',
+            fill: '#ffffff',
+          }
+        );
       }
 
       function update() {
@@ -115,6 +146,11 @@
               : 180 - Math.abs(player.angle) // going down and left
           );
         }
+
+        timeDisplay.setText(
+          'Time: ' +
+            Phaser.Math.FloorTo(this.sys.game.loop.time.toString() / 1000, 0)
+        );
       }
 
       function cleanScuff(player, scuff) {
