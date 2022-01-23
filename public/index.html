@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="UTF-8" />
+
     <script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
 
@@ -8,7 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
   </head>
   <body>
-    <h1>hey buuuuddy</h1>
+    <h1>Ice Resurfacer 2000</h1>
     <script>
       var config = {
         type: Phaser.AUTO,
@@ -16,44 +18,79 @@
         height: 600,
         physics: {
           default: 'arcade',
-          arcade: {
-            gravity: { y: 200 },
-          },
         },
         scene: {
           preload: preload,
           create: create,
+          update: update,
         },
       };
+
+      var cursors;
+      var player;
 
       var game = new Phaser.Game(config);
 
       function preload() {
-        this.load.setBaseURL('http://labs.phaser.io');
+        // this.load.setBaseURL('http://labs.phaser.io');
 
-        this.load.image('sky', 'assets/skies/space3.png');
-        this.load.image('logo', 'assets/sprites/phaser3-logo.png');
-        this.load.image('red', 'assets/particles/red.png');
+        this.load.image('rink', 'assets/rink2.png');
+        this.load.image('resurfacer', 'assets/resurfacer.png');
       }
 
       function create() {
-        this.add.image(400, 300, 'sky');
+        this.add.image(400, 300, 'rink');
+        player = this.physics.add.sprite(100, 100, 'resurfacer').setScale(1.5);
+        player.setDamping(true);
+        player.setDrag(0.98);
+        player.setCollideWorldBounds(true);
 
-        var particles = this.add.particles('red');
+        //  Input Events
+        cursors = this.input.keyboard.createCursorKeys();
 
-        var emitter = particles.createEmitter({
-          speed: 100,
-          scale: { start: 1, end: 0 },
-          blendMode: 'ADD',
-        });
+        // var particles = this.add.particles('red');
 
-        var logo = this.physics.add.image(400, 100, 'logo');
+        // var emitter = particles.createEmitter({
+        //   speed: 100,
+        //   scale: { start: 1, end: 0 },
+        //   blendMode: 'ADD',
+        // });
 
-        logo.setVelocity(100, 200);
-        logo.setBounce(1, 1);
-        logo.setCollideWorldBounds(true);
+        // var logo = this.physics.add.image(400, 100, 'logo');
 
-        emitter.startFollow(logo);
+        // logo.setVelocity(100, 200);
+        // logo.setBounce(1, 1);
+        // logo.setCollideWorldBounds(true);
+
+        // emitter.startFollow(logo);
+      }
+
+      function update() {
+        var up;
+        if (player.angle > 0) up = true;
+        if (player.angle < 0) up = false;
+
+        if (cursors.left.isDown) {
+          player.setAngle(player.angle - 3);
+        } else if (cursors.right.isDown) {
+          player.setAngle(player.angle + 3);
+        } else if (cursors.up.isDown) {
+          // console.log(up);
+          player.setVelocityX(Math.abs(player.angle) - 90);
+          console.log(player.accelerationX);
+
+          // console.log(Math.abs(player.angle) - 90);
+          player.setVelocityY(
+            // translating angle into x and y velocities sucks
+            Math.abs(player.angle) < 180 - Math.abs(player.angle)
+              ? up
+                ? -Math.abs(player.angle) // going up and right
+                : Math.abs(player.angle) // going down and right
+              : up
+              ? -180 + Math.abs(player.angle) // going up and left
+              : 180 - Math.abs(player.angle) // going down and left
+          );
+        }
       }
     </script>
   </body>
