@@ -35,6 +35,7 @@
       var timeDisplay;
       var boards;
       var currentRinkName;
+      var gameOver = false;
 
       var game = new Phaser.Game(config);
 
@@ -137,11 +138,25 @@
               : 180 - Math.abs(player.angle) // going down and left
           );
         }
-
-        timeDisplay.setText(
-          'Time: ' +
-            Phaser.Math.FloorTo(this.sys.game.loop.time.toString() / 1000, 0)
+        time = Phaser.Math.FloorTo(
+          this.sys.game.loop.time.toString() / 1000,
+          0
         );
+        if (time > 99) {
+          gameOver = true;
+        }
+
+        if (!gameOver) {
+          timeDisplay.setText('Time: ' + time);
+        }
+
+        if (gameOver) {
+          this.physics.pause();
+          this.add.text(400, 300, "You're fired!", {
+            fontSize: '32px',
+            fill: '#ffffff',
+          });
+        }
       }
 
       function cleanScuff(player, scuff) {
