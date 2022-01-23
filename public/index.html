@@ -43,6 +43,9 @@
         });
       }
 
+      var score = 0;
+      var scoreText;
+
       function create() {
         this.add.image(400, 300, 'sky');
         platforms = this.physics.add.staticGroup();
@@ -136,8 +139,15 @@
         function collectStar(player, star) {
           star.disableBody(true, true);
           // this callback disabled physics and makes the star invisible - basically removing it from play
+          score += 10;
+          scoreText.setText('Score: ' + score); // update the score and its text display on screen
         }
-      }
+
+        scoreText = this.add.text(16, 16, 'score: 0', {
+          fontSize: '32px',
+          fill: '#000',
+        });
+      } // end of CREATE phaser function
 
       function update() {
         if (cursors.left.isDown) {
