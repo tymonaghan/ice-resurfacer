@@ -81,15 +81,6 @@
         player.setDrag(0.98);
         player.setCollideWorldBounds(true);
 
-        // make the resurfacer sparkle all the time because why not
-        var particles = this.add.particles('red');
-        var emitter = particles.createEmitter({
-          speed: 100,
-          scale: { start: 1, end: 0 },
-          blendMode: 'ADD',
-        });
-        emitter.startFollow(player);
-
         //  Input Events
         cursors = this.input.keyboard.createCursorKeys();
 
@@ -158,6 +149,24 @@
 
         score += 1;
         scoreText.setText('Score: ' + score);
+
+        if (scuffs.countActive(true) === 0) {
+          //  when all scuffs are collected, game over man, game over.
+          // make the resurfacer sparkle all the time because why not
+          var particles = this.add.particles('red');
+          var emitter = particles.createEmitter({
+            speed: 100,
+            scale: { start: 1, end: 0 },
+            blendMode: 'ADD',
+          });
+          emitter.startFollow(player);
+          this.physics.pause();
+          this.add.text(400, 300, 'You did it!', {
+            fontSize: '32px',
+            fill: '#ffffff',
+          });
+          gameOver = true;
+        }
       }
     </script>
   </body>
