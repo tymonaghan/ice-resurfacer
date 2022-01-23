@@ -94,13 +94,14 @@
 
       function update() {
         var up;
+
         if (player.angle > 0) up = true;
         if (player.angle < 0) up = false;
 
         if (cursors.left.isDown) {
-          player.setAngle(player.angle - 3);
+          player.setAngle(player.angle - player.body.speed * 0.03);
         } else if (cursors.right.isDown) {
-          player.setAngle(player.angle + 3);
+          player.setAngle(player.angle + player.body.speed * 0.03);
         } else if (cursors.up.isDown) {
           player.setVelocityX(Math.abs(player.angle) - 90);
           player.setVelocityY(
