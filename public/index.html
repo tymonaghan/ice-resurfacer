@@ -108,6 +108,35 @@
 
         cursors = this.input.keyboard.createCursorKeys();
         // populate cursor object with instances of Key objects. we can poll these in "update" to add keyboard controls
+
+        //STARS!
+        stars = this.physics.add.group({
+          // we want them to move and bounce so they are not static.
+          // this object is the configuration object. this one has three parts:
+          key: 'star',
+          // this is the texture key. any children created as a result of this config will be given the star texture by default
+          repeat: 11,
+          //make one star, then repeat that 11 times (12 stars will be created in total)
+          setXY: { x: 12, y: 0, stepX: 70 },
+          // this determines where the first star goes and then where others go (+70px along the x axis each)
+        });
+
+        stars.children.iterate(function (child) {
+          // iterate through each star and set a bounce for each between .4 and .8
+          child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+        });
+
+        //set collision so stars land on the ground instead of going through it
+        this.physics.add.collider(stars, platforms);
+
+        // also check to see if a player overlaps with a star
+        // i guess this is different default behavior than collide, which would transfer energy from player to star when they collide
+        this.physics.add.overlap(player, stars, collectStar, null, this);
+        // dunno what the null and this are here, but collectStar is this callback, which appears to take in the first two args:
+        function collectStar(player, star) {
+          star.disableBody(true, true);
+          // this callback disabled physics and makes the star invisible - basically removing it from play
+        }
       }
 
       function update() {
