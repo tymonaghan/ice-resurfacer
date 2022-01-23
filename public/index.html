@@ -105,9 +105,33 @@
         // the collider handles collision logic!
         // platforms won't be affected because they are static (otherwise they'd fall down too)
         // this could also invoke my own callback, but not needed for simple static collisions
+
+        cursors = this.input.keyboard.createCursorKeys();
+        // populate cursor object with instances of Key objects. we can poll these in "update" to add keyboard controls
       }
 
-      function update() {}
+      function update() {
+        if (cursors.left.isDown) {
+          // if the player is holding down the left arrow,
+          player.setVelocityX(-160);
+          // start moving to the left and play the sprite's  'left' animation
+          player.anims.play('left', true);
+        } else if (cursors.right.isDown) {
+          player.setVelocityX(160);
+
+          player.anims.play('right', true);
+        } else {
+          player.setVelocityX(0);
+
+          player.anims.play('turn');
+        }
+
+        if (cursors.up.isDown && player.body.touching.down) {
+          // to jump, add a test that they have to be touching the floor to jump!
+          player.setVelocityY(-530);
+          // get them moving and gravity/collision do the rest, just like, ya know, physics
+        }
+      }
     </script>
   </body>
 </html>
