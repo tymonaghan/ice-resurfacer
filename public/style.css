@@ -1,0 +1,13 @@
+body,
+body p {
+  margin: 0;
+  background-color: lightblue;
+  font-family: "Bebas Neue", cursive;
+}
+h1 {
+  color: red;
+}
+h1,
+body > p {
+  text-align: center;
+}
