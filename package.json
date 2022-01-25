@@ -4,7 +4,7 @@
   "description": "test your mettle in the high stakes world of ice resurfacing",
   "main": "index.js",
   "scripts": {
-    "start:dev": "webpack -w & http-server",
+    "start:dev": "webpack -w & http-server -c-1 --cors",
     "start": "http-server",
     "test": "test"
   },
