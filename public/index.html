@@ -42,6 +42,7 @@
       var currentRinkName;
       var gameOver = false;
       var win = false;
+      var timeLimit;
 
       var game = new Phaser.Game(config);
 
@@ -51,6 +52,7 @@
         this.load.image("rink", "assets/rink2.png");
         this.load.image("resurfacer", "assets/resurfacer.png");
         this.load.image("scuff", "assets/scuff.png");
+        this.load.image("scuff2", "assets/scuff2.png");
         this.load.image("boards", "assets/boards.png");
         this.load.image("wall", "assets/platform.png");
       }
@@ -68,7 +70,7 @@
         this.add.image(400, 300, "rink");
         // scuffs
         scuffs = this.physics.add.group({
-          key: "scuff",
+          key: ["scuff", "scuff2"],
           repeat: 50,
           setXY: {
             x: 75,
@@ -103,8 +105,7 @@
           fill: "#ffffff",
         });
 
-        time = 0;
-        timeDisplay = this.add.text(15, 40, "Time: 0", {
+        timeDisplay = this.add.text(15, 40, "Time: X", {
           fontSize: "32px",
           fill: "#ffffff",
         });
@@ -119,6 +120,7 @@
             fill: "#ffffff",
           }
         );
+        timeLimit = 99;
       }
 
       function update() {
@@ -148,7 +150,7 @@
           this.sys.game.loop.time.toString() / 1000,
           0
         );
-        if (time > 99) {
+        if (time > timeLimit) {
           gameOver = true;
         }
 
