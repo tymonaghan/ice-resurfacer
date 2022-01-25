@@ -1,6 +1,6 @@
 # ice-resurfacer
 
-test your mettle in the high stakes world of ice resurfacing.
+a top-down action driving game set in the high-stakes world of ice resurfacing.
 
 ## features
 
