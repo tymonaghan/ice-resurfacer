@@ -4,7 +4,7 @@
   "description": "test your mettle in the high stakes world of ice resurfacing",
   "main": "index.js",
   "scripts": {
-    "start:dev": "http-server",
+    "start:dev": "webpack -w & http-server",
     "start": "http-server",
     "test": "test"
   },
@@ -13,5 +13,12 @@
   "dependencies": {
     "http-server": "^14.1.0",
     "phaser": "^3.55.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.12",
+    "@babel/preset-env": "^7.16.11",
+    "babel-loader": "^8.2.3",
+    "webpack": "^5.67.0",
+    "webpack-cli": "^4.9.2"
   }
 }
