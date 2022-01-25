@@ -1,4 +1,5 @@
 import TitleScreen from "./TitleScreen";
+import Menu from "./Menu";
 import GamePlay from "./GamePlay";
 
 const config = {
@@ -9,7 +10,7 @@ const config = {
   physics: {
     default: "arcade",
   },
-  scene: [TitleScreen, GamePlay],
+  scene: [TitleScreen, Menu, GamePlay],
 };
 
 var game = new Phaser.Game(config);

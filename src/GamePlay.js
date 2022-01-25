@@ -1,5 +1,3 @@
-import Phaser from "phaser";
-
 export default class GamePlay extends Phaser.Scene {
   constructor() {
     super("GamePlay");
@@ -102,19 +100,10 @@ export default class GamePlay extends Phaser.Scene {
         fill: "#ffffff",
       }
     );
-
-    this.spacebar = this.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.SPACE
-    );
-
     this.timeLimit = 99;
   }
 
   update() {
-    if (this.spacebar.isDown) {
-      console.log(`you pressed spacebar, hooray`);
-    }
-
     var up;
 
     if (this.player.angle > 0) up = true;

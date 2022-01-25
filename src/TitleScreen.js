@@ -1,6 +1,7 @@
 export default class TitleScreen extends Phaser.Scene {
   constructor() {
     super("TitleScreen");
+    this.spacebar;
   }
 
   preload() {
@@ -16,12 +17,15 @@ export default class TitleScreen extends Phaser.Scene {
       fontSize: "32px",
       fill: "#ffff00",
     });
-
-    this.input.keyboard.on("keyup-SPACE", (event) => {
-      console.log(`lets get it`);
-      this.scene.start("GamePlay");
-    });
+    this.spacebar = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.SPACE
+    );
   }
 
-  update() {}
+  update() {
+    if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
+      console.log(`spacebar up: moving to MENU,`);
+      this.scene.start("Menu");
+    }
+  }
 }
