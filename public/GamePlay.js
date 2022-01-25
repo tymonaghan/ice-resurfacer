@@ -17,6 +17,7 @@ export default class GamePlay extends Phaser.Scene {
     this.spacebar;
     this.timeLimit;
     this.gamestate;
+    this.timerEvent;
   }
   preload() {
     this.load.setPath("assets/");
@@ -32,6 +33,7 @@ export default class GamePlay extends Phaser.Scene {
   }
 
   create() {
+    this.timerEvent = this.time.addEvent({ delay: 99000, loop: false });
     //boards (write under the rink so they're invisible)
     this.boards = this.physics.add.staticGroup();
     // boards.create(400, 300, 'boards');
@@ -106,14 +108,6 @@ export default class GamePlay extends Phaser.Scene {
     );
 
     this.timeLimit = 99;
-
-    // TITLE SCREEN
-    // this.add.image(400, 300, "logo1").setScale(2);
-    // this.add.image(400, 300, "logo2").setScale(2);
-    // this.add.text(170, 300, "PRESS SPACEBAR TO PLAY", {
-    //   fontSize: "32px",
-    //   fill: "#ffff00",
-    // });
   }
 
   update() {
@@ -143,10 +137,8 @@ export default class GamePlay extends Phaser.Scene {
           : 180 - Math.abs(this.player.angle) // going down and left
       );
     }
-    this.time = Phaser.Math.FloorTo(
-      this.sys.game.loop.time.toString() / 1000,
-      0
-    );
+
+    this.timeKeeper(this.timerEvent);
     if (this.time > this.timeLimit) {
       this.gameOver = true;
     }
@@ -169,6 +161,9 @@ export default class GamePlay extends Phaser.Scene {
         });
       }
     }
+  }
+  timeKeeper(timer) {
+    this.time = Math.floor(timer.getOverallProgress() * 100);
   }
 
   cleanScuff(player, scuff) {
